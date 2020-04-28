@@ -142,3 +142,4 @@ cython_debug/
 
 # Extract from script:
 Static/
+modules/hooks/*.sample
