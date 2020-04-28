@@ -136,3 +136,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# IDE related.
+.idea/
+
+# Extract from script:
+Static/
