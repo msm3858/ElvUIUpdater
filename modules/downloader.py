@@ -45,8 +45,8 @@ class Downloader:
         if os_running == 'Windows':
             self._client = 'win'
         else:
-            logger.error(f"Your system is not appropriate for this application. [System: {os_running} not handled].")
-            sys.exit(1)
+            logger.warning(f"Your system is not tested for this application. [System: {os_running}].")
+            self._client = 'other'
 
     def _get_download_zip_link(self):
         self._elvui_download_zip_link = f'{self._download_file_link_prefix}{self._elvui_current_version}.zip'
