@@ -51,9 +51,22 @@ class Downloader:
     def _get_download_zip_link(self):
         self._elvui_download_zip_link = f'{self._download_file_link_prefix}{self._elvui_current_version}.zip'
 
+    def _get_response(self, url, allow_redirects=None):
+        while True:
+            try:
+                if allow_redirects:
+                    return requests.get(url, allow_redirects=allow_redirects)
+                else:
+                    return requests.get(url, timeout=10)
+            except requests.ConnectionError:
+                logger.warning("Connection error. Trying again...")
+            except requests.exceptions.ReadTimeout:
+                logger.warning("Connection timeout error. Trying again...")
+
+
     def _get_content_from_page(self, url):
         logger.info(f"Requesting page... [PAGE: {url}")
-        response = requests.get(url)
+        response = self._get_response(url)
         if response.status_code != 200:
             logger.error(f"Did not get proper response from server.\n"
                          f"Checked page: {url}. [CODE={response.status_code}]")
@@ -70,7 +83,7 @@ class Downloader:
 
     def _download_file(self):
         logger.info(f"Downloading zip file... [FROM: '{self._elvui_download_zip_link}' TO: '{self._zip_file_path}']")
-        request = requests.get(self._elvui_download_zip_link, allow_redirects=True)
+        request = self._get_response(self._elvui_download_zip_link, allow_redirects=True)
         with open(self._zip_file_path, 'wb') as zip_file:
             zip_file.write(request.content)
 
